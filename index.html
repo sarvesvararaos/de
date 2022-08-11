@@ -7,29 +7,37 @@
     <title>Document</title>
 </head>
 <body>
+    <p id="demo"></p>
     <script>
-        function run() {
-  
-  // Creating Our XMLHttpRequest object 
-  var xhr = new XMLHttpRequest();
+        async function getApi(){
+            const response = await fetch("http://localhost:8080/test");
 
-  // Making our connection  
-  var url = 'http://localhost:3000/';
-  xhr.open("GET", url, true);
+            var data = await response.json();
+            document.getElementById("demo").innerHTML =+data;
+            console.log(data)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await getApi();
+            
+        }
 
-  // function execute after request is successful 
-  xhr.onreadystatechange = function () {
-      if (this.status == 200) {
-          console.log(this.responseText);
-      }
-  }
-  // Sending our request 
-  xhr.send();
-  
-}
+        getApi();
+        setInterval(function run() {
+            // Creating Our XMLHttpRequest object 
+            var xhr = new XMLHttpRequest();
 
-run()
+            // Making our connection  
+            var url = 'http://localhost:8080/test';
+            xhr.open("GET", url, true);
 
+            // function execute after request is successful 
+            xhr.onreadystatechange = function () {
+                if (this.status == 200) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            }
+            // Sending our request 
+            xhr.send();
+        },1000)
     </script>
 </body>
 </html>
